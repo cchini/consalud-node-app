@@ -1,10 +1,38 @@
 import * as express from "express";
 import * as mongoose from "mongoose";
+import * as cors from "cors";
+import * as bodyParser from "body-parser";
+import { generateRouters } from "./routers/v1";
+import * as httpStatus from "http-status";
+import { importPlans } from "./controllers/v1/plan.controller";
 require("dotenv").config();
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
+generateRouters(app);
 
-app.get("/", (req, res) => res.send(`<ul><li>Hi App Node</li></ul>`));
+app.use(
+  (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): void => {
+    const response = {
+      statusCode: httpStatus.NOT_FOUND,
+      message: "NOT_FOUND",
+      data: null,
+    };
+    res.status(httpStatus.NOT_FOUND).json(response);
+    next();
+  }
+);
 
 mongoose
   .connect(process.env.URL_MONGO || "", {
@@ -15,6 +43,7 @@ mongoose
   })
   .then(() => {
     console.log(`🚀 Mongo OK! 🚀`);
+
     app.listen(process.env.PORT, () => {
       console.log(`🚀 Node App: Listening on port ${process.env.PORT}! 🚀`);
     });
