@@ -1,8 +1,7 @@
 import * as mongoose from "mongoose";
 import { Request, Response, NextFunction } from "express";
 import * as httpStatus from "http-status";
-import * as RequestApi from "request";
-import UserModel, { UserDoc } from "../../models/user.model";
+import UserModel from "../../models/user.model";
 import PlanModel from "../../models/plan.model";
 
 interface ResponseError extends Error {

@@ -71,11 +71,7 @@ export const getFilterPlan = (
   }
 };
 
-export const importPlans = async (
-  __: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const importPlans = async () => {
   try {
     RequestApi.get(
       process.env.URL_GET_PLAN || "",
@@ -93,11 +89,6 @@ export const importPlans = async (
           });
           await PlanModel.create(data);
           console.log(`🚀 Data imported OK! 🚀`);
-          const response = {
-            data: data,
-            statusCode: httpStatus.OK,
-          };
-          res.status(httpStatus.OK).json(response);
         }
       }
     );

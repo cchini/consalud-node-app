@@ -41,9 +41,9 @@ mongoose
     useFindAndModify: false,
     useCreateIndex: true,
   })
-  .then(() => {
+  .then(async () => {
     console.log(`🚀 Mongo OK! 🚀`);
-
+    // await importPlans();
     app.listen(process.env.PORT, () => {
       console.log(`🚀 Node App: Listening on port ${process.env.PORT}! 🚀`);
     });
