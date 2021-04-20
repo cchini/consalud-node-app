@@ -21,3 +21,4 @@ services:
     volumes:
       - .:/app/
       - /app/node_modules/
+      - ./nodemon.json:/home/node/app/nodemon.json
