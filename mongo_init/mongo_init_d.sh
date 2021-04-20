@@ -1,0 +1,2 @@
+
+mongorestore dumps/ -d develop
