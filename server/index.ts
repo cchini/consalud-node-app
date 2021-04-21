@@ -4,7 +4,6 @@ import * as cors from "cors";
 import * as bodyParser from "body-parser";
 import { generateRouters } from "./routers/v1";
 import * as httpStatus from "http-status";
-import { importPlans } from "./controllers/v1/plan.controller";
 require("dotenv").config();
 
 const app = express();
@@ -43,7 +42,6 @@ mongoose
   })
   .then(async () => {
     console.log(`🚀 Mongo OK! 🚀`);
-    // await importPlans();
     app.listen(process.env.PORT, () => {
       console.log(`🚀 Node App: Listening on port ${process.env.PORT}! 🚀`);
     });

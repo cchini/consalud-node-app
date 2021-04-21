@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { Request, Response, NextFunction } from "express";
 import * as httpStatus from "http-status";
-import UserModel from "../../models/user.model";
+import UserModel, { UserDoc } from "../../models/user.model";
 import PlanModel from "../../models/plan.model";
 
 interface ResponseError extends Error {
@@ -41,17 +41,25 @@ export const saveUser = async (
       };
       res.status(httpStatus.BAD_REQUEST).json(response);
     } else {
-      const filter = { rut: dataUser.rut };
-      const options = { upsert: true };
-      const updateDoc = { $set: { plan: planDoc } };
-      const userDoc = await UserModel.updateOne(
-        filter,
-        updateDoc,
-        options
-      ).exec();
+      let data: UserDoc | any;
+      const dataSet = {
+        rut: dataUser.rut,
+        plan: planDoc,
+      };
+      const userDoc = await UserModel.findOne({ rut: dataUser.rut }).exec();
+      if (userDoc) {
+        data = {
+          ...userDoc,
+          ...dataSet,
+        };
+      } else {
+        data = dataSet;
+      }
+
+      const saveData = await new UserModel(data).save();
 
       const response = {
-        data: "data ok",
+        data: saveData,
         statusCode: httpStatus.OK,
       };
       res.status(httpStatus.OK).json(response);

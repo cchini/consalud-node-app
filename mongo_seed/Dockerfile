@@ -1,0 +1,12 @@
+FROM node:10-alpine as generator
+WORKDIR /data
+COPY . .
+RUN npm install
+RUN node ./scripts/index.js
+
+FROM mongo:latest
+
+COPY . .
+COPY --from=generator ./data/ .
+RUN ["chmod", "+x", "init.sh"]
+CMD ./init.sh

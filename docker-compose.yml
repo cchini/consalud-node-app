@@ -1,19 +1,28 @@
 version: "3.7"
 services:
-  mongodb:
+  mongo_db:
     image: mongo:4
-    container_name: "mongodb"
+    container_name: "mongo_db"
     command: mongod
     ports:
       - "27017:27017"
     env_file:
       - .env
+    networks:
+      - samplenetwork
+
+  mongo_seed:
+    container_name: mongo_seed
+    build: ./mongo_seed
+    links:
+      - mongo_db
+    networks:
+      - samplenetwork
 
   node_app:
     depends_on:
-      - mongodb
+      - mongo_db
     build: .
-    command: bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; npm start'
     env_file:
       - .env
     ports:
@@ -21,3 +30,8 @@ services:
     volumes:
       - .:/app/
       - ./nodemon.json:/home/node/app/nodemon.json
+    networks:
+      - samplenetwork
+networks:
+  samplenetwork:
+    driver: bridge
